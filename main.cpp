@@ -10,6 +10,7 @@
 using namespace std;
 
 #define DATA_STACK_SIZE 256
+#define MEMORY_SIZE 65536
 
 stack<int> data_stack;
 stack<string> return_stack;
@@ -18,6 +19,7 @@ int main(){
     
     int sp = 0;
     int rsp = DATA_STACK_SIZE;
+    int* memory = new int[MEMORY_SIZE];
 
     string input;
     vector<string> tokens;
@@ -36,7 +38,7 @@ int main(){
                 
                 if(check_number(t)){
 
-                    // if number push to stack    
+                    // if number push to stack   
 
                     if(data_stack.size() < DATA_STACK_SIZE){
                         data_stack.push(stoi(t));
@@ -48,7 +50,7 @@ int main(){
                     // check if word
 
                     if(find_word(t)){
-                        execute_word(t,data_stack);
+                        execute_word(t,data_stack,memory);
                     }else{
                         cout << "Invalid word!" <<endl;
                     }
@@ -60,6 +62,8 @@ int main(){
         }
 
     }
+
+    delete memory;
 
     return 0;
 }
