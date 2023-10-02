@@ -11,6 +11,7 @@ vector<string> base_words = {"!",".", "+", "-", "*","/", "*/", "0<", "0=", "0>",
 "<", "=", ">", "?DUP", "DUP","ABS","AND","XOR","OR", "MAX", "MIN", "MOD", "OVER", "SWAP", "DROP", "MOVE",
 "NEGATE","PICK", "@", "DEPTH", "FILL"};
 
+
 int findNthFromTop(std::stack<int> st, int n) { // AI generated
     if ( n > st.size() || n<1) {
         std::cerr << "Invalid value of n or stack size." << std::endl;
@@ -45,7 +46,7 @@ int find_word(string w){
     return 0;
 }
 
-void execute_word(string w, stack<int> &s,int* mem){
+void execute_word(string w, stack<int> &s, stack<int> &rs,int* mem){
 
     if(w.compare(".")==0){
         if(s.size() != 0){

@@ -7,8 +7,6 @@ OBJ = main.o
 
 li4th: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
-
-run: li4th.exe
 	./li4th.exe
 
 clean: li4th.exe $(OBJ)

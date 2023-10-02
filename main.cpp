@@ -6,6 +6,7 @@
 
 #include "utils.hpp"
 #include "words.hpp"
+#include "new_word.hpp"
 
 using namespace std;
 
@@ -13,54 +14,78 @@ using namespace std;
 #define MEMORY_SIZE 65536
 
 stack<int> data_stack;
-stack<string> return_stack;
+stack<int> return_stack;
 
-int main(){
-    
+int main()
+{
+
     int sp = 0;
     int rsp = DATA_STACK_SIZE;
-    int* memory = new int[MEMORY_SIZE];
+    int *memory = new int[MEMORY_SIZE];
 
     string input;
     vector<string> tokens;
+    string new_def = "";
 
-    while(1){
+    while (1)
+    {
 
-        cin >> input;
+        getline(cin, input);
 
-        if(input.compare("exit") == 0){
+        if (input.compare("exit") == 0)
+        {
             break;
-        }else{
+        }
+        else
+        {
 
             tokens = tokenize(input);
 
-            for (const std::string& t : tokens) {
-                
-                if(check_number(t)){
+            if (tokens[0].compare(":") == 0)
+            {
 
-                    // if number push to stack   
+                for(int j = 2; j<tokens.size();j++)
+                    new_def+=tokens[j]+" ";
 
-                    if(data_stack.size() < DATA_STACK_SIZE){
-                        data_stack.push(stoi(t));
-                    }else{
-                        cout << "Data stack out of space!" <<endl;
+                NewWord nw(tokens[1],new_def);
+
+                nw.print();  
+
+            }else{
+
+                for (const std::string &t : tokens)
+                {
+
+                    if (check_number(t))
+                    {
+
+                        // if number push to stack
+
+                        if (data_stack.size() < DATA_STACK_SIZE)
+                        {
+                            data_stack.push(stoi(t));
+                        }
+                        else
+                        {
+                            cout << "Data stack out of space!" << endl;
+                        }
                     }
+                    else
+                    {
+                        // check if word
 
-                }else{
-                    // check if word
-
-                    if(find_word(t)){
-                        execute_word(t,data_stack,memory);
-                    }else{
-                        cout << "Invalid word!" <<endl;
+                        if (find_word(t))
+                        {
+                            execute_word(t, data_stack, return_stack, memory);
+                        }
+                        else
+                        {
+                            cout << "Invalid word!" << endl;
+                        }
                     }
-
                 }
-
             }
-
         }
-
     }
 
     delete memory;
