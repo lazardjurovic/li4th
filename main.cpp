@@ -15,6 +15,7 @@ using namespace std;
 
 stack<int> data_stack;
 stack<int> return_stack;
+vector<NewWord> user_words;
 
 int main()
 {
@@ -25,7 +26,7 @@ int main()
 
     string input;
     vector<string> tokens;
-    string new_def = "";
+    string new_def = ""; // definition of new word in regards of existing words
 
     while (1)
     {
@@ -44,14 +45,16 @@ int main()
             if (tokens[0].compare(":") == 0)
             {
 
-                for(int j = 2; j<tokens.size();j++)
-                    new_def+=tokens[j]+" ";
+                for (int j = 2; j < tokens.size(); j++)
+                    new_def += tokens[j] + " ";
 
-                NewWord nw(tokens[1],new_def);
+                NewWord nw(tokens[1], new_def);
+                user_words.push_back(nw);
 
-                nw.print();  
-
-            }else{
+                new_def = "";
+            }
+            else
+            {
 
                 for (const std::string &t : tokens)
                 {
@@ -72,15 +75,31 @@ int main()
                     }
                     else
                     {
-                        // check if word
+                        // check if user defined word
 
-                        if (find_word(t))
-                        {
-                            execute_word(t, data_stack, return_stack, memory);
+                        string to_execute = userWord(user_words, t);
+
+                        if (to_execute.compare("Not found") != 0)
+                        { // if found
+                            
+                            vector<string> primitives = tokenize(to_execute);
+
+                            for(string &prim : primitives){
+                                execute_word(prim,data_stack,return_stack,memory);
+                            }
+
                         }
-                        else
+                        else // look up in predefined words
                         {
-                            cout << "Invalid word!" << endl;
+
+                            if (find_word(t))
+                            {
+                                execute_word(t, data_stack, return_stack, memory);
+                            }
+                            else
+                            {
+                                cout << "Invalid word!" << endl;
+                            }
                         }
                     }
                 }
