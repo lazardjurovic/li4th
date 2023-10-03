@@ -5,12 +5,17 @@
 #include <vector>
 #include <cmath>
 
+#include "variable.hpp"
+
 using namespace std;
 
-vector<string> base_words = {"!",".", "+", "-", "*","/", "*/", "0<", "0=", "0>", "1+", "1-", "2+", "2-",
+vector<string> base_words = {"!",".", "+", "-", "*","/", "*/", "*/MOD","0<", "0=", "0>", "1+", "1-", "2+", "2-",
 "<", "=", ">", "?DUP", "DUP","ABS","AND","XOR","OR", "MAX", "MIN", "MOD", "OVER", "SWAP", "DROP", "MOVE",
-"NEGATE","PICK", "@", "DEPTH", "FILL"};
+"NEGATE","PICK", "@", "DEPTH", "FILL", "VARIABLE"};
 
+vector<Variable> variables;
+
+int creating_var = 0;
 
 int findNthFromTop(std::stack<int> st, int n) { // AI generated
     if ( n > st.size() || n<1) {
@@ -46,7 +51,7 @@ int find_word(string w){
     return 0;
 }
 
-void execute_word(string w, stack<int> &s, stack<int> &rs,int* mem){
+void execute_word(string w, vector<string> tokens,stack<int> &s, stack<int> &rs,int* mem, int &mem_end){
 
     if(w.compare(".")==0){
         if(s.size() != 0){
@@ -94,6 +99,22 @@ void execute_word(string w, stack<int> &s, stack<int> &rs,int* mem){
         mem[addr] = s.top();
         s.pop();
         
+    }else if(w.compare("*/MOD")==0){
+        int n3 = s.top();
+        s.pop();
+        int n2 = s.top();
+        s.pop();
+        int n1 = s.top();
+        s.pop();
+        s.push((n1*n2)%n3);
+        s.push(n1*n2/n3);
+        
+    }else if(w.compare("+!")==0){
+        int addr = s.top();
+        s.pop();
+        int n = s.top();
+        s.pop();
+        mem[addr] += n;
     }else if(w.compare("0<")==0){
         if(s.top()<0){
             s.pop();
@@ -285,6 +306,13 @@ void execute_word(string w, stack<int> &s, stack<int> &rs,int* mem){
                 mem[addr+i] = byte;
             }
         }
+    }else if(w.compare("VARIABLE")==0){
+        // first find where "VARIABLE" is in input line
+        creating_var = 1;
+        Variable var(tokens[1],mem_end,0);
+        variables.push_back(var);
+        mem_end--;
+        
     }
 
 }

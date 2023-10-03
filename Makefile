@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-I.
-OBJ = main.o 
+OBJ = main.o variable.o
 
 %.o: %.cpp %.hpp
 	$(CC) -c -o $@ $< $(CFLAGS)

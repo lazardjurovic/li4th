@@ -23,6 +23,7 @@ int main()
     int sp = 0;
     int rsp = DATA_STACK_SIZE;
     int *memory = new int[MEMORY_SIZE];
+    int mem_end = MEMORY_SIZE -1;
 
     string input;
     vector<string> tokens;
@@ -72,6 +73,14 @@ int main()
                         {
                             cout << "Data stack out of space!" << endl;
                         }
+                    } else if(isVariable(t,variables)){
+                        
+                        // process variables
+                        if(!creating_var)
+                            data_stack.push(findVariable(t,variables)->getAddress());
+                        else   
+                            creating_var = 0;
+
                     }
                     else
                     {
@@ -85,7 +94,7 @@ int main()
                             vector<string> primitives = tokenize(to_execute);
 
                             for(string &prim : primitives){
-                                execute_word(prim,data_stack,return_stack,memory);
+                                execute_word(prim,tokens,data_stack,return_stack,memory,mem_end);
                             }
 
                         }
@@ -94,7 +103,7 @@ int main()
 
                             if (find_word(t))
                             {
-                                execute_word(t, data_stack, return_stack, memory);
+                                execute_word(t, tokens ,data_stack, return_stack, memory,mem_end);
                             }
                             else
                             {
