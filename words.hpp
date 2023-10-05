@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "variable.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
@@ -17,32 +18,7 @@ vector<Variable> variables;
 
 int creating_var = 0;
 
-int findNthFromTop(std::stack<int> st, int n) { // AI generated
-    if ( n > st.size() || n<1) {
-        std::cerr << "Invalid value of n or stack size." << std::endl;
-        return -1; // Return an error value
-    }
-
-    std::vector<int> tempVec;
-
-    // Pop elements from the stack and store them in a temporary vector
-    while (!st.empty()) {
-        tempVec.push_back(st.top());
-        st.pop();
-    }
-
-    // Get the n-th element from the top
-    int nthElement = tempVec[n];
-
-    // Restore the original stack
-    for (int i = tempVec.size() - 1; i >= 0; i--) {
-        st.push(tempVec[i]);
-    }
-
-    return nthElement;
-}
-
-int find_word(string w){
+int isWord(string w){
     for(int i=0; i<base_words.size();i++){
         if(base_words[i].compare(w) == 0){
             return 1;

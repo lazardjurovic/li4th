@@ -29,6 +29,8 @@ int main()
     vector<string> tokens;
     string new_def = ""; // definition of new word in regards of existing words
 
+
+    /*
     while (1)
     {
 
@@ -115,6 +117,60 @@ int main()
             }
         }
     }
+
+    */
+
+   while(1){
+    getline(cin, input);
+
+        if (input.compare("exit") == 0)
+        {
+            break;
+        }
+        else
+        {
+            tokens = tokenize(input);
+
+            for(string &t : tokens){
+                if(check_number(t)){
+                    if(data_stack.size()<DATA_STACK_SIZE)
+                        data_stack.push(stoi(t));
+                    else
+                        cout << "Data stack is full!"<<endl;
+                }else{
+                    if(isVariable(t,variables)){
+                        if(!creating_var)
+                            data_stack.push(findVariable(t,variables)->getAddress());
+                        else   
+                            creating_var = 0;
+                    }else{
+                        if(isWord(t)){
+                            return_stack.push(indexOf(t,base_words));
+                            //cout << "index of word " << t << " is "<< indexOf(t,base_words)<<endl;
+                            //cout << "Size of return stack is now " << return_stack.size()<<endl;
+                        }else{
+                            cout << "Invalid word!"<<endl;
+                        }
+                    }
+
+
+
+                }
+            }
+
+            return_stack = reverseStack(return_stack);
+
+            while(return_stack.size()>0){
+                //cout << "executing word with address "<< return_stack.top() <<endl;
+                execute_word(base_words[return_stack.top()],tokens,data_stack,return_stack,memory,mem_end);
+                return_stack.pop();
+            }
+
+        }
+   }
+
+
+
 
     delete memory;
 
