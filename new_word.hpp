@@ -1,3 +1,6 @@
+#ifndef NEW_WORD_HPP
+#define NEW_WORD_HPP
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -32,3 +35,5 @@ string userWord(vector<NewWord> words, string n){
     }
     return "Not found";
 }
+
+#endif
