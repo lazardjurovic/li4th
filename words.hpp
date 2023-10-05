@@ -11,7 +11,7 @@
 
 using namespace std;
 
-vector<string> base_words = {"!", ".", "+", "-", "*", "/", "*/", "*/MOD", "0<", "0=", "0>", "1+", "1-", "2+", "2-",
+vector<string> base_words = {"WORDS","!", ".", "+", "-", "*", "/", "*/", "*/MOD", "0<", "0=", "0>", "1+", "1-", "2+", "2-",
                              "<", "=", ">", ">R", "?DUP", "DUP", "ABS", "AND", "XOR", "OR", "MAX", "MIN", "MOD", "OVER", "SWAP", "DROP", "MOVE",
                              "NEGATE", "PICK", "@", "DEPTH", "FILL", "VARIABLE", ":", ";"};
 
@@ -36,8 +36,12 @@ int isWord(string w)
 
 void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs, int *mem, int &mem_end)
 {
-
-    if (w.compare(".") == 0)
+    if(w.compare("WORDS")==0){
+        for(NewWord &nw : user_words){
+            nw.print();
+        }
+    }
+    else if (w.compare(".") == 0)
     {
         if (s.size() != 0)
         {
@@ -400,10 +404,17 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
     {
         compile_mode = 0;
 
-        //empty word_def;
-
-        for(string &wd : word_def){
-            cout << wd << " ";
+        string word_name = word_def[0];
+        string word_body = " ";
+        for(int i = 1; i< word_def.size(); i++){
+            word_body += word_def[i] + " ";
         }
+
+        NewWord nw(word_name,word_body);
+        user_words.push_back(nw);
+
+        word_def = {};
+
+
     }
 }
