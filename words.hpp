@@ -221,7 +221,7 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         s.pop();
         int b = s.top();
         s.pop();
-        if (a < b)
+        if (b < a)
         {
             s.push(1);
         }
@@ -236,7 +236,7 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         s.pop();
         int b = s.top();
         s.pop();
-        if (a > b)
+        if (b > a)
         {
             s.push(1);
         }

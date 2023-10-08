@@ -39,6 +39,7 @@ int main()
         }
         else
         {
+
             tokens = tokenize(input);
 
             for (string &t : tokens)
@@ -51,12 +52,11 @@ int main()
                     else{
                         word_def.push_back(t);
                     }
-                }else if(if_happened && executing==1){
-                    execute_word(t,tokens,data_stack,return_stack,memory,mem_end);
-                }else if(if_happened  && executing == 0){
-                    if(t.compare("THEN")==0){
-                        execute_word("THEN",tokens,data_stack,return_stack,memory,mem_end);
+                }else if(if_happened==1){// if
+                    if(executing || t.compare("ELSE")==0){
+                        execute_word(t,tokens,data_stack,return_stack,memory,mem_end);
                     }
+
                 }
                 else if(isUserWord(t)){
 
