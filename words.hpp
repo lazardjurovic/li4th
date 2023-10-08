@@ -22,6 +22,9 @@ vector<NewWord> user_words;
 int creating_var = 0;
 int compile_mode = 0;
 
+int executing = 0;
+int if_happened = 0;
+
 int isWord(string w)
 {
     for (int i = 0; i < base_words.size(); i++)
@@ -50,9 +53,17 @@ int isUserWord(string w)
 
 void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs, int *mem, int &mem_end)
 {
+
     if (check_number(w))
     {
         s.push(stoi(w));
+    }
+    else if (isVariable(w, variables))
+    {
+        if (!creating_var)
+            s.push(findVariable(w, variables)->getAddress());
+        else
+            creating_var = 0;
     }
     else if (w.compare("WORDS") == 0)
     {
@@ -151,7 +162,7 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         else
         {
             s.pop();
-            s.push(1);
+            s.push(-1);
         }
     }
     else if (w.compare("0=") == 0)
@@ -164,12 +175,12 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         else
         {
             s.pop();
-            s.push(1);
+            s.push(-1);
         }
     }
     else if (w.compare("0>") == 0)
     {
-        if (s.top() < 0)
+        if (s.top() > 0)
         {
             s.pop();
             s.push(1);
@@ -177,7 +188,7 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         else
         {
             s.pop();
-            s.push(1);
+            s.push(-1);
         }
     }
     else if (w.compare("1+") == 0)
@@ -436,6 +447,29 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         user_words.push_back(nw);
 
         word_def = {};
+    }
+    else if (w.compare("IF") == 0)
+    {   
+        if_happened = 1;
+        int cond = s.top();
+        s.pop();
+
+        if(cond == 1){
+            executing = 1;
+        }else{
+            executing = 0;
+        }
+
+    }else if(w.compare("ELSE")==0){
+        if(executing == 1){
+            executing = 0;
+        }else{
+            executing = 1;
+        }
+
+    }
+    else if(w.compare("THEN")==0){
+        if_happened = 0;
     }
     else
     {

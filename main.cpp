@@ -51,21 +51,24 @@ int main()
                     else{
                         word_def.push_back(t);
                     }
-                }else if(isUserWord(t)){
+                }else if(if_happened && executing==1){
+                    execute_word(t,tokens,data_stack,return_stack,memory,mem_end);
+                }else if(if_happened  && executing == 0){
+                    if(t.compare("THEN")==0){
+                        execute_word("THEN",tokens,data_stack,return_stack,memory,mem_end);
+                    }
+                }
+                else if(isUserWord(t)){
+
+                    // TODO: support multiple levels of definitions
+
                     string words = userWord(user_words,t);
 
                     vector<string> toks = tokenize(words);
                     for(string &tok : toks){
-                         execute_word(tok, tokens, data_stack, return_stack, memory, mem_end);
+                        execute_word(tok, tokens, data_stack, return_stack, memory, mem_end);
                     }
 
-                }
-                else if (isVariable(t, variables))
-                {
-                    if (!creating_var)
-                        data_stack.push(findVariable(t, variables)->getAddress());
-                    else
-                        creating_var = 0;
                 }
                 else if (isWord(t))
                 {
