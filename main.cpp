@@ -51,14 +51,14 @@ int main()
                     else{
                         word_def.push_back(t);
                     }
-                }
-                else if (check_number(t))
-                {
+                }else if(isUserWord(t)){
+                    string words = userWord(user_words,t);
 
-                    if (data_stack.size() < DATA_STACK_SIZE)
-                        data_stack.push(stoi(t));
-                    else
-                        cout << "Data stack is full!" << endl;
+                    vector<string> toks = tokenize(words);
+                    for(string &tok : toks){
+                         execute_word(tok, tokens, data_stack, return_stack, memory, mem_end);
+                    }
+
                 }
                 else if (isVariable(t, variables))
                 {
@@ -69,14 +69,11 @@ int main()
                 }
                 else if (isWord(t))
                 {
-
                     return_stack.push(indexOf(t, base_words));
-                    // cout << "index of word " << t << " is "<< indexOf(t,base_words)<<endl;
-                    // cout << "Size of return stack is now " << return_stack.size()<<endl;
                 }
                 else
                 {
-                    cout << "Invalid word!" << endl;
+                    execute_word(t, tokens, data_stack, return_stack, memory, mem_end);
                 }
 
                 // this block is placed here because executing some words can change return stack
@@ -84,7 +81,6 @@ int main()
                 return_stack = reverseStack(return_stack);
                 while (return_stack.size() > 0)
                 {
-                    // cout << "executing word with address "<< return_stack.top() <<endl;
                     if (!compile_mode)
                     {
                         execute_word(base_words[return_stack.top()], tokens, data_stack, return_stack, memory, mem_end);

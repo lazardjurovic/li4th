@@ -11,7 +11,7 @@
 
 using namespace std;
 
-vector<string> base_words = {"WORDS","!", ".", "+", "-", "*", "/", "*/", "*/MOD", "0<", "0=", "0>", "1+", "1-", "2+", "2-",
+vector<string> base_words = {"WORDS", "!", ".", "+", "-", "*", "/", "*/", "*/MOD", "0<", "0=", "0>", "1+", "1-", "2+", "2-",
                              "<", "=", ">", ">R", "?DUP", "DUP", "ABS", "AND", "XOR", "OR", "MAX", "MIN", "MOD", "OVER", "SWAP", "DROP", "MOVE",
                              "NEGATE", "PICK", "@", "DEPTH", "FILL", "VARIABLE", ":", ";"};
 
@@ -34,10 +34,30 @@ int isWord(string w)
     return 0;
 }
 
+int isUserWord(string w)
+{
+
+    for (NewWord &nw : user_words)
+    {
+        if (nw.getName().compare(w) == 0)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs, int *mem, int &mem_end)
 {
-    if(w.compare("WORDS")==0){
-        for(NewWord &nw : user_words){
+    if (check_number(w))
+    {
+        s.push(stoi(w));
+    }
+    else if (w.compare("WORDS") == 0)
+    {
+        for (NewWord &nw : user_words)
+        {
             nw.print();
         }
     }
@@ -328,8 +348,8 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         s.pop();
         int b = s.top();
         s.pop();
-        s.push(a);
         s.push(b);
+        s.push(a);
     }
     else if (w.compare("DROP") == 0)
     {
@@ -398,6 +418,7 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
     else if (w.compare(":") == 0)
     {
         // enter into compile mode
+        word_def = {};
         compile_mode = 1;
     }
     else if (w.compare(";") == 0)
@@ -406,15 +427,18 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
 
         string word_name = word_def[0];
         string word_body = " ";
-        for(int i = 1; i< word_def.size(); i++){
+        for (int i = 1; i < word_def.size(); i++)
+        {
             word_body += word_def[i] + " ";
         }
 
-        NewWord nw(word_name,word_body);
+        NewWord nw(word_name, word_body);
         user_words.push_back(nw);
 
         word_def = {};
-
-
+    }
+    else
+    {
+        cout << "Invalid word." << endl;
     }
 }
