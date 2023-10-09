@@ -13,17 +13,18 @@ using namespace std;
 
 vector<string> base_words = {"WORDS", "!", ".", "+", "-", "*", "/", "*/", "*/MOD", "0<", "0=", "0>", "1+", "1-", "2+", "2-",
                              "<", "=", ">", ">R", "?DUP", "DUP", "ABS", "AND", "XOR", "OR", "MAX", "MIN", "MOD", "OVER", "SWAP", "DROP", "MOVE",
-                             "NEGATE", "PICK", "@", "DEPTH", "FILL", "VARIABLE", ":", ";"};
+                             "NEGATE", "PICK", "@", "DEPTH", "FILL", "VARIABLE", ":", ";","IF","ELSE","THEN", "R>", "R@"};
 
 vector<Variable> variables;
 vector<string> word_def; // definition of new word in regards of existing words
 vector<NewWord> user_words;
 
+stack<int> flow_stack;
+
 int creating_var = 0;
 int compile_mode = 0;
 
-int executing = 0;
-int if_happened = 0;
+int executing = 1;
 
 int isWord(string w)
 {
@@ -54,11 +55,7 @@ int isUserWord(string w)
 void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs, int *mem, int &mem_end)
 {
 
-    if (check_number(w))
-    {
-        s.push(stoi(w));
-    }
-    else if (isVariable(w, variables))
+    if (isVariable(w, variables))
     {
         if (!creating_var)
             s.push(findVariable(w, variables)->getAddress());
@@ -353,6 +350,18 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
         s.push(a);
         s.push(b);
     }
+    else if (w.compare("R>") == 0)
+    {
+        int n= rs.top();
+        rs.pop();
+        s.push(n);
+
+    }
+    else if (w.compare("R@") == 0)
+    {
+        int n= rs.top();
+        s.push(n);
+    }
     else if (w.compare("SWAP") == 0)
     {
         int a = s.top();
@@ -450,15 +459,15 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
     }
     else if (w.compare("IF") == 0)
     {   
-        if_happened = 1;
-        int cond = s.top();
+        int n = s.top();
         s.pop();
-
-        if(cond == 1){
+        flow_stack.push(n);
+        if(flow_stack.top() == 1){ // true
             executing = 1;
-        }else{
+        }else{ // false
             executing = 0;
         }
+
 
     }else if(w.compare("ELSE")==0){
         if(executing == 1){
@@ -469,7 +478,10 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
 
     }
     else if(w.compare("THEN")==0){
-        if_happened = 0;
+        if(!flow_stack.empty()){
+            flow_stack.pop();
+        }
+        executing = 1;
     }
     else
     {

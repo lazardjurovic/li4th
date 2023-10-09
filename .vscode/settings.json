@@ -102,5 +102,6 @@
     "typeinfo": "cpp",
     "sstream": "cpp",
     "stack": "cpp"
-  }
+  },
+  "C_Cpp_Runner.msvcSecureNoWarnings": false
 }

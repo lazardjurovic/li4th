@@ -52,15 +52,15 @@ int main()
                     else{
                         word_def.push_back(t);
                     }
-                }else if(if_happened==1){// if
-                    if(executing || t.compare("ELSE")==0){
-                        execute_word(t,tokens,data_stack,return_stack,memory,mem_end);
-                    }
-
+                
+                }else if(check_number(t)){
+                    if(executing)
+                        data_stack.push(stoi(t));
                 }
                 else if(isUserWord(t)){
 
                     // TODO: support multiple levels of definitions
+                    // TODO: fix if to work with user words
 
                     string words = userWord(user_words,t);
 
@@ -69,25 +69,30 @@ int main()
                         execute_word(tok, tokens, data_stack, return_stack, memory, mem_end);
                     }
 
+                }else if(isWord(t) && t.compare("THEN")==0){
+                    executing = 1;
                 }
                 else if (isWord(t))
-                {
-                    return_stack.push(indexOf(t, base_words));
+                {   
+                    if(executing)
+                        return_stack.push(indexOf(t, base_words));
                 }
                 else
                 {
-                    execute_word(t, tokens, data_stack, return_stack, memory, mem_end);
+                    cout << "Not recognised literal."<<endl;
                 }
 
                 // this block is placed here because executing some words can change return stack
-
+                
                 return_stack = reverseStack(return_stack);
                 while (return_stack.size() > 0)
                 {
                     if (!compile_mode)
                     {
-                        execute_word(base_words[return_stack.top()], tokens, data_stack, return_stack, memory, mem_end);
-                        return_stack.pop();
+                        if(executing){
+                            execute_word(base_words[return_stack.top()], tokens, data_stack, return_stack, memory, mem_end);
+                            return_stack.pop();
+                        }
                     }
                     else
                     { // handle compile mode
