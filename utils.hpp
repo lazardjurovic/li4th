@@ -6,6 +6,25 @@
 #include <sstream>
 #include "variable.hpp"
 #include <stack>
+#include <queue>
+
+
+string queueNth(const std::queue<string>& originalQueue, int n) {
+    if (n < 1 || n > originalQueue.size()) {
+        std::cerr << "Invalid value of n." << std::endl;
+        return "Not found"; // Return an error value
+    }
+
+    std::queue<string> copyQueue = originalQueue;
+
+    // Dequeue elements from the copy queue until the nth element is found
+    for (int i = 1; i < n; i++) {
+        copyQueue.pop();
+    }
+
+    // The nth element is now at the front of the copy queue
+    return copyQueue.front();
+}
 
 std::vector<std::string> tokenize(std::string input){
         
