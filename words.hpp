@@ -18,12 +18,15 @@ vector<string> base_words = {"WORDS", "!", ".", "+", "-", "*", "/", "*/", "*/MOD
 vector<Variable> variables;
 vector<string> word_def; // definition of new word in regards of existing words
 vector<NewWord> user_words;
+queue<string> program;
+
+stack<int> data_stack;
+stack<int> return_stack;
 
 stack<int> flow_stack;
 stack<int> control_stack;
 int program_counter = 1;
 
-int creating_var = 0;
 int compile_mode = 0;
 
 int executing = 1;
@@ -57,16 +60,7 @@ int isUserWord(string w)
 void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs, int *mem, int &mem_end)
 {
 
-    if (isVariable(w, variables))
-    {
-        if (!creating_var)
-            s.push(findVariable(w, variables)->getAddress());
-        else
-            creating_var = 0;
-
-        program_counter++;
-    }
-    else if (w.compare("WORDS") == 0)
+    if (w.compare("WORDS") == 0)
     {
         for (NewWord &nw : user_words)
         {
@@ -474,12 +468,12 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
     }
     else if (w.compare("VARIABLE") == 0)
     {
-        // first find where "VARIABLE" is in input line
-        creating_var = 1;
-        Variable var(tokens[1], mem_end, 0);
+        Variable var(queueNth(program,program_counter+1), mem_end, 0);
         variables.push_back(var);
         mem_end--;
-        program_counter++;
+        program_counter+=2;
+
+        cout << "CREATED VAR: " << var.getName() << " PC: " << program_counter <<endl;
     }
     else if (w.compare("DO") == 0)
     {

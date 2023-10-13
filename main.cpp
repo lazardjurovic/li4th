@@ -14,10 +14,6 @@ using namespace std;
 #define DATA_STACK_SIZE 256
 #define MEMORY_SIZE 65536
 
-stack<int> data_stack;
-stack<int> return_stack;
-queue<string> program;
-
 extern int compile_mode;
 
 int main()
@@ -61,6 +57,11 @@ int main()
                 {
                     if (executing)
                         execute_word(word,base_words,data_stack,return_stack,memory,mem_end);
+                }else if(isVariable(word,variables)){
+                    cout << "IS VARIABLE"<<endl;
+                    data_stack.push(findVariable(word,variables)->getAddress());
+                    program_counter++;
+
                 }
                 else
                 {

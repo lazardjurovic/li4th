@@ -9,7 +9,7 @@
 #include <queue>
 
 
-string queueNth(const std::queue<string>& originalQueue, int n) {
+string queueNth(const std::queue<string>& originalQueue, int n) { 
     if (n < 1 || n > originalQueue.size()) {
         std::cerr << "Invalid value of n." << std::endl;
         return "Not found"; // Return an error value
