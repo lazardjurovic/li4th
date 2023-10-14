@@ -7,6 +7,8 @@
 
 using namespace std;
 
+//TODO: Implement body as string vector for easier manipulation
+
 class NewWord{
 
     public:
@@ -15,7 +17,7 @@ class NewWord{
             words = w;
         };
         void print(){
-            cout << "New word name: " << name << " and it's words are: " << words<<endl;
+            cout << name << " -> " << words << endl;
         };
         string getName(){ return name;};
         string getWords(){ return words;};
@@ -26,14 +28,5 @@ class NewWord{
         string words;
 
 };
-
-string userWord(vector<NewWord> words, string n){
-    for(NewWord &nw : words){
-        if(nw.getName().compare(n)==0){
-            return nw.getWords(); 
-        }
-    }
-    return "Not found";
-}
 
 #endif

@@ -26,6 +26,26 @@ string queueNth(const std::queue<string>& originalQueue, int n) {
     return copyQueue.front();
 }
 
+void insertAtIndex(std::queue<std::string>& q, int index, const std::string& element) {
+    std::queue<std::string> tempQueue;
+
+    // Pop elements from the original queue and push them into the temporary queue
+    while (index > 0 && !q.empty()) {
+        tempQueue.push(q.front());
+        q.pop();
+        index--;
+    }
+
+    // Insert the new element at the specified index
+    tempQueue.push(element);
+
+    // Push the remaining elements from the temporary queue back into the original queue
+    while (!tempQueue.empty()) {
+        q.push(tempQueue.front());
+        tempQueue.pop();
+    }
+}
+
 std::vector<std::string> tokenize(std::string input){
         
         std::istringstream iss(input);
@@ -117,6 +137,41 @@ stack<int> reverseStack(stack<int> s) {
     }
 
     return reversed;
+}
+
+void removeAtIndex(std::queue<std::string>& q, int index) {
+    if (index < 0 || index >= q.size()) {
+        // Invalid index, nothing to remove
+        return;
+    }
+
+    std::queue<std::string> tempQueue;
+
+    // Pop elements from the original queue and push them into the temporary queue, skipping the element at the specified index
+    for (int i = 0; i < q.size(); i++) {
+        if (i != index) {
+            tempQueue.push(q.front());
+        }
+        q.pop();
+    }
+
+    // Copy elements back from the temporary queue to the original queue
+    while (!tempQueue.empty()) {
+        q.push(tempQueue.front());
+        tempQueue.pop();
+    }
+}
+
+void deleteLast(std::queue<std::string>& strQueue) {
+    if (!strQueue.empty()) {
+        int size = strQueue.size();
+        for (int i = 0; i < size - 1; i++) {
+            std::string frontElement = strQueue.front();
+            strQueue.pop();
+            strQueue.push(frontElement);
+        }
+        strQueue.pop(); // Remove the last element (newest)
+    }
 }
 
 #endif

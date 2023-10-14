@@ -14,8 +14,6 @@ using namespace std;
 #define DATA_STACK_SIZE 256
 #define MEMORY_SIZE 65536
 
-extern int compile_mode;
-
 int main()
 {
     int *memory = new int[MEMORY_SIZE];
@@ -44,6 +42,7 @@ int main()
 
             while (program_counter <= program.size())
             {
+
                 string word = queueNth(program, program_counter);
                 if (check_number(word))
                 {
@@ -55,7 +54,7 @@ int main()
                 }
                 else if (isWord(word))
                 {
-                    if (executing || word.compare("ELSE") == 0 || word.compare("THEN") == 0)
+                    if (executing || word.compare("ELSE") == 0 || word.compare("THEN") == 0 || word.compare(";") == 0)
                     {
                         execute_word(word, data_stack, return_stack, memory, mem_end);
                     }
@@ -72,6 +71,31 @@ int main()
                     }
 
                     program_counter++;
+                }
+                else if (userWord(word, user_words))
+                {
+                    for (NewWord &nw : user_words)
+                    {
+                        if (nw.getName().compare(word) == 0)
+                        {
+
+                          // insert definition of user word into progam queue and move
+                          // program counter to star executing it
+
+                            deleteLast(program);
+
+                            string wrds = nw.getWords();
+                            vector<string> def = tokenize(wrds);
+
+                            for(string &s : def){
+                                program.push(s);
+                            }
+                            
+                            break;
+
+                        }
+                    }
+
                 }
                 else
                 {

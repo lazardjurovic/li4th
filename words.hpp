@@ -17,7 +17,8 @@ vector<string> base_words = {"WORDS", "!", ".", "+", "-", "*", "/", "*/", "*/MOD
 
 vector<Variable> variables;
 vector<string> word_def; // definition of new word in regards of existing words
-vector<NewWord> user_words;
+vector<NewWord> user_words; // definitions of all user words
+
 queue<string> program;
 
 stack<int> data_stack;
@@ -27,9 +28,16 @@ stack<int> flow_stack;
 stack<int> control_stack;
 int program_counter = 1;
 
-int compile_mode = 0;
-
 int executing = 1;
+
+int userWord(string n, vector<NewWord> words){
+    for(NewWord &nw : words){
+        if(nw.getName().compare(n)==0){
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int isWord(string w)
 {
@@ -40,20 +48,6 @@ int isWord(string w)
             return 1;
         }
     }
-    return 0;
-}
-
-int isUserWord(string w)
-{
-
-    for (NewWord &nw : user_words)
-    {
-        if (nw.getName().compare(w) == 0)
-        {
-            return 1;
-        }
-    }
-
     return 0;
 }
 
@@ -535,11 +529,35 @@ void execute_word(string w, stack<int> &s, stack<int> &rs, int *mem, int &mem_en
     }
     else if (w.compare(":") == 0)
     {
-
+        executing = 0;
+        program_counter++;
 
     }
     else if (w.compare(";") == 0)
     {
+
+        executing=1;
+
+        for(int i =program_counter-1; queueNth(program,i).compare(":")!=0;i--){
+            word_def.push_back(queueNth(program,i));
+        }
+        reverse(word_def.begin(),word_def.end());
+
+        // get first element for name
+        string name = word_def.front();
+        word_def.erase(word_def.begin());
+
+        //add other elements into word body
+        string def = "";
+
+        for(string &s : word_def){
+            def += s + " ";
+        }
+
+        NewWord nw(name,def);
+        user_words.push_back(nw);
+
+        program_counter++;
 
     }
     else if (w.compare("IF") == 0)
