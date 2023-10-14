@@ -45,30 +45,40 @@ int main()
             while (program_counter <= program.size())
             {
                 string word = queueNth(program, program_counter);
-
                 if (check_number(word))
                 {
-                    if (executing){
-                        program_counter++;
+                    if (executing)
+                    {
                         data_stack.push(stoi(word));
                     }
+                    program_counter++;
                 }
                 else if (isWord(word))
                 {
+                    if (executing || word.compare("ELSE") == 0 || word.compare("THEN") == 0)
+                    {
+                        execute_word(word, data_stack, return_stack, memory, mem_end);
+                    }
+                    else
+                    {
+                        program_counter++;
+                    }
+                }
+                else if (isVariable(word, variables))
+                {
                     if (executing)
-                        execute_word(word,base_words,data_stack,return_stack,memory,mem_end);
-                }else if(isVariable(word,variables)){
-                    cout << "IS VARIABLE"<<endl;
-                    data_stack.push(findVariable(word,variables)->getAddress());
-                    program_counter++;
+                    {
+                        data_stack.push(findVariable(word, variables)->getAddress());
+                    }
 
+                    program_counter++;
                 }
                 else
                 {
                     cout << "Unknown word" << endl;
+                    program_counter++;
                 }
             }
-
         }
     }
 

@@ -57,7 +57,7 @@ int isUserWord(string w)
     return 0;
 }
 
-void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs, int *mem, int &mem_end)
+void execute_word(string w, stack<int> &s, stack<int> &rs, int *mem, int &mem_end)
 {
 
     if (w.compare("WORDS") == 0)
@@ -535,29 +535,12 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
     }
     else if (w.compare(":") == 0)
     {
-        // enter into compile mode
-        word_def = {};
-        compile_mode = 1;
-        executing = 0;
-        program_counter++;
+
+
     }
     else if (w.compare(";") == 0)
     {
-        compile_mode = 0;
 
-        string word_name = word_def[0];
-        string word_body = " ";
-        for (int i = 1; i < word_def.size(); i++)
-        {
-            word_body += word_def[i] + " ";
-        }
-
-        NewWord nw(word_name, word_body);
-        user_words.push_back(nw);
-
-        word_def = {};
-        executing = 1;
-        program_counter++;
     }
     else if (w.compare("IF") == 0)
     {
@@ -575,6 +558,7 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
             executing = 0;
         }
         program_counter++;
+
     }
     else if (w.compare("ELSE") == 0)
     {
@@ -587,6 +571,8 @@ void execute_word(string w, vector<string> tokens, stack<int> &s, stack<int> &rs
             executing = 1;
         }
         program_counter++;
+
+
     }
     else if (w.compare("THEN") == 0)
     {
