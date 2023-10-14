@@ -16,7 +16,7 @@ vector<string> base_words = {"WORDS", "!", ".", "+", "-", "*", "/", "*/", "*/MOD
                              "NEGATE", "PICK", "@", "DEPTH", "FILL", "VARIABLE", ":", ";", "IF", "ELSE", "THEN", "R>", "R@", "DO", "LOOP", "I"};
 
 vector<Variable> variables;
-vector<string> word_def; // definition of new word in regards of existing words
+vector<string> word_def;    // definition of new word in regards of existing words
 vector<NewWord> user_words; // definitions of all user words
 
 queue<string> program;
@@ -30,9 +30,12 @@ int program_counter = 1;
 
 int executing = 1;
 
-int userWord(string n, vector<NewWord> words){
-    for(NewWord &nw : words){
-        if(nw.getName().compare(n)==0){
+int userWord(string n, vector<NewWord> words)
+{
+    for (NewWord &nw : words)
+    {
+        if (nw.getName().compare(n) == 0)
+        {
             return 1;
         }
     }
@@ -462,12 +465,10 @@ void execute_word(string w, stack<int> &s, stack<int> &rs, int *mem, int &mem_en
     }
     else if (w.compare("VARIABLE") == 0)
     {
-        Variable var(queueNth(program,program_counter+1), mem_end, 0);
+        Variable var(queueNth(program, program_counter + 1), mem_end, 0);
         variables.push_back(var);
         mem_end--;
-        program_counter+=2;
-
-        cout << "CREATED VAR: " << var.getName() << " PC: " << program_counter <<endl;
+        program_counter += 2;
     }
     else if (w.compare("DO") == 0)
     {
@@ -479,10 +480,6 @@ void execute_word(string w, stack<int> &s, stack<int> &rs, int *mem, int &mem_en
         control_stack.push(start);
         control_stack.push(limit);
         control_stack.push(program_counter);
-
-        cout << "start: " << start << endl;
-        cout << "limit: " << limit << endl;
-        cout << "PC: " << program_counter << endl;
     }
     else if (w.compare("LOOP") == 0)
     {
@@ -531,34 +528,34 @@ void execute_word(string w, stack<int> &s, stack<int> &rs, int *mem, int &mem_en
     {
         executing = 0;
         program_counter++;
-
     }
     else if (w.compare(";") == 0)
     {
 
-        executing=1;
+        executing = 1;
 
-        for(int i =program_counter-1; queueNth(program,i).compare(":")!=0;i--){
-            word_def.push_back(queueNth(program,i));
+        for (int i = program_counter - 1; queueNth(program, i).compare(":") != 0; i--)
+        {
+            word_def.push_back(queueNth(program, i));
         }
-        reverse(word_def.begin(),word_def.end());
+        reverse(word_def.begin(), word_def.end());
 
         // get first element for name
         string name = word_def.front();
         word_def.erase(word_def.begin());
 
-        //add other elements into word body
+        // add other elements into word body
         string def = "";
 
-        for(string &s : word_def){
+        for (string &s : word_def)
+        {
             def += s + " ";
         }
 
-        NewWord nw(name,def);
+        NewWord nw(name, def);
         user_words.push_back(nw);
 
         program_counter++;
-
     }
     else if (w.compare("IF") == 0)
     {
@@ -576,7 +573,6 @@ void execute_word(string w, stack<int> &s, stack<int> &rs, int *mem, int &mem_en
             executing = 0;
         }
         program_counter++;
-
     }
     else if (w.compare("ELSE") == 0)
     {
@@ -589,8 +585,6 @@ void execute_word(string w, stack<int> &s, stack<int> &rs, int *mem, int &mem_en
             executing = 1;
         }
         program_counter++;
-
-
     }
     else if (w.compare("THEN") == 0)
     {

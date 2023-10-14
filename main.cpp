@@ -90,7 +90,7 @@ int main()
                             for(string &s : def){
                                 program.push(s);
                             }
-                            
+
                             break;
 
                         }
@@ -104,6 +104,13 @@ int main()
                 }
             }
         }
+    }
+
+    // print full program that was executed
+
+    while (!program.empty()) {
+    std::cout << program.front() << " ";
+    program.pop();
     }
 
     delete memory;
